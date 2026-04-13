@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modern Font Switcher</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
+
+        :root {
+            --primary: #5A56E9;
+            --primary-hover: #4844C7;
+            --bg: #F4F5F7;
+            --surface: #FFFFFF;
+            --text-main: #1A1A1A;
+            --text-muted: #737373;
+            --border: #E5E7EB;
+            --bg-output: #F9FAFB;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text-main);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            background-color: var(--surface);
+            width: 100%;
+            max-width: 500px;
+            padding: 32px 24px;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+        }
+
+        h1 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 6px;
+            text-align: center;
+        }
+
+        p.subtitle {
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            margin-bottom: 28px;
+            line-height: 1.4;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label.section-label {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.9rem;
+            font-weight: 500;
+            margin-bottom: 10px;
+            color: var(--text-main);
+        }
+
+        .optional-badge {
+            font-size: 0.75rem;
+            background-color: var(--border);
+            padding: 2px 8px;
+            border-radius: 12px;
+            color: var(--text-muted);
+            font-weight: 400;
+        }
+
+        textarea, .text-input {
+            width: 100%;
+            padding: 14px;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            font-size: 1rem;
+            outline: none;
+            transition: border-color 0.2s;
+            color: var(--text-main);
+        }
+
+        textarea {
+            height: 100px;
+            resize: none;
+        }
+
+        textarea:focus, .text-input:focus {
+            border-color: var(--primary);
+        }
+
+        .help-text {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-top: 6px;
+        }
+
+        /* Slider Font Style */
+        .font-slider {
+            display: flex;
+            overflow-x: auto;
+            gap: 10px;
+            padding-bottom: 8px;
+            scroll-behavior: smooth;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
+        }
+
+        .font-slider::-webkit-scrollbar {
+            display: none;
+        }
+
+        .font-option {
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+
+        .font-option input {
+            display: none;
+        }
+
+        .font-option span {
+            display: inline-block;
+            padding: 8px 16px;
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            background: var(--surface);
+            transition: all 0.2s ease;
+            user-select: none;
+            white-space: nowrap;
+        }
+
+        .font-option input:checked + span {
+            background-color: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .output-box {
+            background-color: var(--bg-output);
+            border: 1px dashed #D1D5DB;
+            border-radius: 12px;
+            padding: 14px;
+            min-height: 100px;
+            font-size: 1.1rem;
+            word-wrap: break-word;
+            white-space: pre-wrap;
+            color: var(--text-main);
+        }
+
+        .btn-copy {
+            width: 100%;
+            padding: 14px;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            margin-top: 10px;
+        }
+
+        .btn-copy:hover {
+            background-color: var(--primary-hover);
+        }
+
+        .btn-copy:active {
+            transform: scale(0.98);
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Text Switcher</h1>
+    <p class="subtitle">Ubah teksmu ke berbagai style modern &<br>anti-sensor</p>
+
+    <div class="form-group">
+        <label class="section-label" for="inputText">Masukkan Teks Utama:</label>
+        <textarea id="inputText" placeholder="Ketik kalimat panjang di sini..."></textarea>
+    </div>
+
+    <div class="form-group">
+        <label class="section-label" for="targetWords">
+            Ubah kata tertentu saja
+            <span class="optional-badge">Opsional</span>
+        </label>
+        <input type="text" id="targetWords" class="text-input" placeholder="Contoh: hai, kamu, keren">
+        <p class="help-text">Pisahkan dengan koma. Kosongkan jika ingin mengubah semua teks.</p>
+    </div>
+
+    <div class="form-group">
+        <label class="section-label">Pilih Style / Font:</label>
+        <div class="font-slider" id="fontSlider">
+            <label class="font-option"><input type="radio" name="font" value="antiSensor" checked><span>🛡️ Anti Sensor</span></label>
+            <label class="font-option"><input type="radio" name="font" value="random"><span>🎲 Random Mix</span></label>
+            <label class="font-option"><input type="radio" name="font" value="premium"><span>ℙ𝕣𝕖𝕞𝕚𝕦𝕞</span></label>
+            <label class="font-option"><input type="radio" name="font" value="typewriter"><span>𝚃𝚢𝚙𝚎 𝚠𝚛𝚒𝚝𝚎𝚛</span></label>
+            <label class="font-option"><input type="radio" name="font" value="boldSerif"><span>𝐁𝐨𝐥𝐝𝐒𝐞𝐫𝐢𝐟</span></label>
+            <label class="font-option"><input type="radio" name="font" value="festival"><span>ܻ⨍ꫀׁׅܻׅ݊꯱tׁׅꪱׁׁׁׁׅׅׅׅ᥎ׁׅɑׁׅᥣׁׅ֪</span></label>
+            <label class="font-option"><input type="radio" name="font" value="charity"><span>¢нαяιту</span></label>
+            <label class="font-option"><input type="radio" name="font" value="symbol"><span>ꇙꌦꂵꃳꄲ꒒</span></label>
+            <label class="font-option"><input type="radio" name="font" value="cartoon"><span>ᑕᗩᖇTOOᑎ</span></label>
+            <label class="font-option"><input type="radio" name="font" value="smallcap"><span>sᴍᴀʟʟᴄᴀᴘ</span></label>
+            <label class="font-option"><input type="radio" name="font" value="stickyCaps"><span>sTiCkYCaPs</span></label>
+            <label class="font-option"><input type="radio" name="font" value="wide"><span>Ｗｉｄｅ</span></label>
+            <label class="font-option"><input type="radio" name="font" value="boldItalic"><span>𝘽𝙤𝙡𝙙 𝙄𝙩𝙖𝙡𝙞𝙘</span></label>
+            <label class="font-option"><input type="radio" name="font" value="italic"><span>𝘐𝘵𝘢𝘭𝘪𝘤</span></label>
+            <label class="font-option"><input type="radio" name="font" value="serif"><span>𝑆𝑒𝑟𝑖𝑓</span></label>
+            <label class="font-option"><input type="radio" name="font" value="boldSans"><span>𝗕𝗼𝗹𝗱 𝗦𝗮𝗻𝘀</span></label>
+            <label class="font-option"><input type="radio" name="font" value="sans"><span>𝖲𝖺𝗇𝗌</span></label>
+            <label class="font-option"><input type="radio" name="font" value="superscript"><span>ˢᵘᵖᵉʳˢᶜʳᶦᵖᵗ</span></label>
+            <label class="font-option"><input type="radio" name="font" value="subscript"><span>ₛᵤᵦₛ𝒸ᵣᵢₚₜ</span></label>
+            <label class="font-option"><input type="radio" name="font" value="circle"><span>ⒸⒾⓇⒸⓁⒺ</span></label>
+            <label class="font-option"><input type="radio" name="font" value="box"><span>🄱🄾🅇</span></label>
+            <label class="font-option"><input type="radio" name="font" value="round"><span>🅡🅞🅤🅝🅓</span></label>
+            <label class="font-option"><input type="radio" name="font" value="square"><span>🆂🆆🆄🅰🆁🅴</span></label>
+            <label class="font-option"><input type="radio" name="font" value="cute"><span>ᥴᥙ𝗍ᥱ</span></label>
+            <label class="font-option"><input type="radio" name="font" value="comic"><span>cօოíc</span></label>
+            <label class="font-option"><input type="radio" name="font" value="twist"><span>ႵwiაႵ</span></label>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="section-label">Hasil:</label>
+        <div id="outputText" class="output-box"></div>
+    </div>
+
+    <button class="btn-copy" id="copyBtn">Salin Teks</button>
+</div>
+
+<script>
+    const baseAlphabets = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    
+    const fontData = {
+        normal: "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ",
+        premium: "𝕒𝕓𝕔𝕕𝕖𝕗𝕘𝕙𝕚𝕛𝕜𝕝𝕞𝕟𝕠𝕡𝕢𝕣𝕤𝕥𝕦𝕧𝕨𝕩𝕪𝕫𝔸𝔹ℂ𝔻𝔼𝔽𝔾ℍ𝕀𝕁𝕂𝕃𝕄ℕ𝕆ℙℚℝ𝕊𝕋𝕌𝕍𝕎𝕏𝕐ℤ",
+        typewriter: "𝚊𝚋𝚌𝚍𝚎𝚏𝚐𝚑𝚒𝚓𝚔𝚕𝚖𝚗𝚘𝚙𝚚𝚛𝚜𝚝𝚞𝚟𝚠𝚡𝚢𝚣𝙰𝙱𝙲𝙳𝙴𝙵𝙶𝙷𝙸𝙹𝙺𝙻𝙼𝙽𝙾𝙿𝚀𝚁𝚂𝚃𝚄𝚅𝚆𝚇𝚈𝚉",
+        boldSerif: "𝐚𝐛𝐜𝐝𝐞𝐟𝐠𝐡𝐢𝐣𝐤𝐥𝐦𝐧𝐨𝐩𝐪𝐫𝐬𝐭𝐮𝐯𝐰𝐱𝐲𝐳𝐀𝐁𝐂𝐃𝐄𝐅𝐆𝐇𝐈𝐉𝐊𝐋𝐌𝐍𝐎𝐏𝐐𝐑𝐒𝐓𝐔𝐕𝐖𝐗𝐘𝐙",
+        festival: "ɑׁׅ֮ϐׁᝯׁ֒ժׁׅ݊ꫀׁׅܻܻ݊⨍ᧁׁhׁׅ֮ꪱׁׁׁׅׅׅյׁׅƙׁׅᥣׁׅ֪ꩇׁׅ֪݊݊ꪀᨵׁׅׅ℘qׁׅꭈׁׅׅ꯱тׁׅυׁׁׅׅ᥎ׁׅᨰׁׅ᥊ׁׅᨮׁׅ֮zׁׅ֬ɑׁׅ֮ϐׁᝯׁ֒ժׁׅ݊ꫀׁׅܻܻ݊⨍ᧁׁhׁׅ֮ꪱׁׁׁׅׅׅյׁׅƙׁׅᥣׁׅ֪ꩇׁׅ֪݊݊ꪀᨵׁׅׅ℘qׁׅꭈׁׅׅ꯱tׁׅυׁׁׅׅ᥎ׁׅᨰׁׅ᥊ׁׅᨮׁׅ֮zׁׅ֬",
+        charity: "αв¢∂єƒgнιʝкℓмησρqяѕтυνωχуzαв¢∂єƒgнιʝкℓмησρqяѕтυνωχуz",
+        symbol: "ꋬꃳꉔ꒯ꏂꊰꍌꁝ꒐꒻ꀘ꒒ꂵꋊꄲꉣꆰꋪꇙ꓄꒤꒦ꅐꉧꌦꁴꋬꃳꉔ꒯ꏂꊰꍌꁝ꒐꒻ꀘ꒒ꂵꋊꄲꉣꆰꋪꇙ꓄꒤꒦ꅐꉧꌦꁴ",
+        cartoon: "ᗩᗷᑕᗪᗴᖴᘜᕼIᒍKᒪᗰᑎOᑭᑫᖇՏTᑌᐯᗯ᙭YᘔᗩᗷᑕᗪᗴᖴᘜᕼIᒍKᒪᗰᑎOᑭᑫᖇՏTᑌᐯᗯ᙭Yᘔ",
+        smallcap: "ᴀʙᴄᴅᴇғɢʜɪᴊᴋʟᴍɴᴏᴘǫʀsᴛᴜᴠᴡxʏᴢᴀʙᴄᴅᴇғɢʜɪᴊᴋʟᴍɴᴏᴘǫʀsᴛᴜᴠᴡxʏᴢ",
+        stickyCaps: "aBcDeFgHiJkLmNoPqRsTuVwXyZaBcDeFgHiJkLmNoPqRsTuVwXyZ",
+        wide: "ａｂｃｄｅｆｇｈｉｊｋｌｍｎｏｐｑｒｓｔｕｖｗｘｙｚＡＢＣＤＥＦＧＨＩＪＫＬＭＮＯＰＱＲＳＴＵＶＷＸＹＺ",
+        boldItalic: "𝙖𝙗𝙘𝙙𝙚𝙛𝙜𝙝𝙞𝙟𝙠𝙡𝙢𝙣𝙤𝙥𝙦𝙧𝙨𝙩𝙪𝙫𝙬𝙭𝙮𝙯𝘼𝘽𝘾𝘿𝙀𝙁𝙂𝙃𝙄𝙅𝙆𝙇𝙈𝙉𝙊𝙋𝙌𝙍𝙎𝙏𝙐𝙑𝙒𝙓𝙔𝙕",
+        italic: "𝘢𝘣𝘤𝘥𝘦𝘧𝘨𝘩𝘪𝘫𝘬𝘭𝘮𝘯𝘰𝘱𝘲𝘳𝘴𝘵𝘶𝘷𝘸𝘹𝘺𝘻𝘈𝘉𝘊𝘋𝘌𝘍𝘎𝘏𝘐𝘑𝘒𝘓𝘔𝘕𝘖𝘗𝘘𝘙𝘚𝘛𝘜𝘝𝘞𝘟𝘠𝘡",
+        serif: "𝑎𝑏𝑐𝑑𝑒𝑓𝑔ℎ𝑖𝑗𝑘𝑙𝑚𝑛𝑜𝑝𝑞𝑟𝑠𝑡𝑢𝑣𝑤𝑥𝑦𝑧𝐴𝐵𝐶𝐷𝐸𝐹𝐺𝐻𝐼𝐽𝐾𝐿𝑀𝑁𝑂𝑃𝑄𝑅𝑆𝑇𝑈𝑉𝑊𝑋𝑌𝑍",
+        boldSans: "𝗮𝗯𝗰𝗱𝗲𝗳𝗴𝗵𝗶𝗷𝗸𝗹𝗺𝗻𝗼𝗽𝗾𝗿𝘀𝘁𝘂𝘃𝘄𝘅𝘆𝘇𝗔𝗕𝗖𝗗𝗘𝗙𝗚𝗛𝗜𝗝𝗞𝗟𝗠𝗡𝗢𝗣𝗤𝗥𝗦𝗧𝗨𝗩𝗪𝗫𝗬𝗭",
+        sans: "𝖺𝖻𝖼𝖽𝖾𝖿𝗀𝗁𝗂𝗃𝗄𝗅𝗆𝗇𝗈𝗉𝗊𝗋𝗌𝗍𝗎𝗏𝗐𝗑𝗒𝗓𝖠𝖡𝖢𝖣𝖤𝖥𝖦𝖧𝖨𝖩𝖪𝖫𝖬𝖭𝖮𝖯𝖰𝖱𝖲𝖳𝖴𝖵𝖶𝖷𝖸𝖹",
+        superscript: "ᵃᵇᶜᵈᵉᶠᵍʰᶦʲᵏˡᵐⁿᵒᵖᵠʳˢᵗᵘᵛʷˣʸᶻᴬᴮᶜᴰᴱᶠᴳᴴᴵᴶᴷᴸᴹᴺᴼᴾᵠᴿˢᵀᵁⱽᵂˣʸᶻ",
+        subscript: "ₐᵦ𝒸𝒹ₑ𝒻𝓰ₕᵢⱼₖₗₘₙₒₚᵩᵣₛₜᵤᵥ𝓌ₓᵧ𝓏ₐᵦ𝒸𝒹ₑ𝒻𝓰ₕᵢⱼₖₗₘₙₒₚᵩᵣₛₜᵤᵥ𝓌ₓᵧ𝓏",
+        circle: "ⓐⓑⓒⓓⓔⓕⓖⓗⓘⓙⓚⓛⓜⓝⓞⓟⓠⓡⓢⓣⓤⓥⓦⓧⓨⓩⒶⒷⒸⒹⒺⒻⒼⒽⒾⒿⓀⓁⓂⓃⓄⓅⓆⓇⓈⓉⓊⓋⓌⓍⓎⓏ",
+        box: "🄰🄱🄲🄳🄴🄵🄶🄷🄸🄹🄺🄻🄼🄽🄾🄿🅀🅁🅂🅃🅄🅅🅆🅇🅈🅉🄰🄱🄲🄳🄴🄵🄶🄷🄸🄹🄺🄻🄼🄽🄾🄿🅀🅁🅂🅃🅄🅅🅆🅇🅈🅉",
+        round: "🅐🅑🅒🅓🅔🅕🅖🅗🅘🅙🅚🅛🅜🅝🅞🅟🅠🅡🅢🅣🅤🅥🅦🅧🅨🅩🅐🅑🅒🅓🅔🅕🅖🅗🅘🅙🅚🅛🅜🅝🅞🅟🅠🅡🅢🅣🅤🅥🅦🅧🅨🅩",
+        square: "🅰🅱🅲🅳🅴🅵🅶🅷🅸🅹🅺🅻🅼🅽🅾🅿🆀🆁🆂🆃🆄🆅🆆🆇🆈🆉🅰🅱🅲🅳🅴🅵🅶🅷🅸🅹🅺🅻🅼🅽🅾🅿🆀🆁🆂🆃🆄🆅🆆🆇🆈🆉",
+        cute: "ᥲᑲᥴძᥱ𝖿gһіȷkᥣmᥒ᥆⍴𝗊rs𝗍ᥙ᥎ᥕ᥊ᥡzᥲᑲᥴძᥱ𝖿gһіȷkᥣmᥒ᥆⍴𝗊rs𝗍ᥙ᥎ᥕ᥊ᥡz",
+        comic: "αճcժҽբցհíյklოղօթզɾsԵմѵաxվzαճcժҽբցհíյklოղօթզɾsԵմѵաxվz",
+        twist: "მႦႺძჹfყႹiქႬსოႶიႼႩჁაႵႮvwxႸzმႦႺძჹFყႹIქႬსოႶიႼႭჁႽႵႮVWXჄZ"
+    };
+
+    const segmenter = new Intl.Segmenter('en', { granularity: 'grapheme' });
+    const splitStr = (str) => Array.from(segmenter.segment(str)).map(x => x.segment);
+    
+    const parsedFonts = {};
+    for (const [key, val] of Object.entries(fontData)) {
+        parsedFonts[key] = splitStr(val);
+    }
+
+    const allFontsKeys = Object.keys(parsedFonts);
+    const antiSensorPool = ['normal', 'typewriter'];
+
+    const inputText = document.getElementById('inputText');
+    const targetWordsInput = document.getElementById('targetWords');
+    const fontRadios = document.querySelectorAll('input[name="font"]');
+    const outputText = document.getElementById('outputText');
+    const copyBtn = document.getElementById('copyBtn');
+
+    // Fungsi inti untuk mengubah string menjadi font pilihan
+    function convertString(str, selectedFont) {
+        let result = "";
+        for (let i = 0; i < str.length; i++) {
+            const char = str[i];
+            const index = baseAlphabets.indexOf(char);
+
+            if (index !== -1) {
+                let fontKeyToUse = selectedFont;
+                if (selectedFont === 'random') {
+                    fontKeyToUse = allFontsKeys[Math.floor(Math.random() * allFontsKeys.length)];
+                } else if (selectedFont === 'antiSensor') {
+                    fontKeyToUse = antiSensorPool[Math.floor(Math.random() * antiSensorPool.length)];
+                }
+                result += parsedFonts[fontKeyToUse][index] || char;
+            } else {
+                result += char;
+            }
+        }
+        return result;
+    }
+
+    // Fungsi untuk melarikan (escape) karakter regex jika user mengetik simbol aneh
+    function escapeRegExp(string) {
+        return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    }
+
+    function processText() {
+        const text = inputText.value;
+        const selectedRadio = document.querySelector('input[name="font"]:checked');
+        if (!selectedRadio) return;
+        const selectedFont = selectedRadio.value;
+
+        // Ambil input kata target, pisahkan dengan koma, hilangkan spasi berlebih
+        const targets = targetWordsInput.value
+            .split(',')
+            .map(word => word.trim())
+            .filter(word => word.length > 0);
+
+        if (targets.length === 0) {
+            // Jika kosong, ubah seluruh teks
+            outputText.textContent = convertString(text, selectedFont);
+        } else {
+            // Urutkan dari kata terpanjang ke terpendek agar matching lebih akurat 
+            // (misal: "gimana kabarnya" diproses sebelum "gimana")
+            const escapedTargets = targets.map(escapeRegExp).sort((a, b) => b.length - a.length);
+            
+            // Buat pola regex secara dinamis (case-insensitive / 'gi')
+            const regex = new RegExp(`(${escapedTargets.join('|')})`, 'gi');
+            
+            // Temukan kata yang cocok dan ubah HANYA kata tersebut
+            const result = text.replace(regex, (match) => {
+                return convertString(match, selectedFont);
+            });
+            
+            outputText.textContent = result;
+        }
+    }
+
+    // Event Listeners
+    inputText.addEventListener('input', processText);
+    targetWordsInput.addEventListener('input', processText);
+    fontRadios.forEach(radio => radio.addEventListener('change', processText));
+
+    // Fitur Copy dengan fallback
+    copyBtn.addEventListener('click', () => {
+        const textToCopy = outputText.textContent;
+        if (!textToCopy) return;
+
+        const showSuccessUI = () => {
+            const originalText = copyBtn.textContent;
+            copyBtn.textContent = "Berhasil Disalin! ✓";
+            copyBtn.style.backgroundColor = "#10B981";
+            setTimeout(() => {
+                copyBtn.textContent = originalText;
+                copyBtn.style.backgroundColor = "";
+            }, 2000);
+        };
+
+        const copyFallback = () => {
+            const tempTextArea = document.createElement("textarea");
+            tempTextArea.value = textToCopy;
+            tempTextArea.style.position = "absolute";
+            tempTextArea.style.left = "-9999px";
+            document.body.appendChild(tempTextArea);
+            tempTextArea.select();
+            try {
+                document.execCommand('copy');
+                showSuccessUI();
+            } catch (err) {
+                alert("Gagal menyalin. Silakan salin manual.");
+            }
+            document.body.removeChild(tempTextArea);
+        };
+
+        if (navigator.clipboard && window.isSecureContext) {
+            navigator.clipboard.writeText(textToCopy).then(showSuccessUI).catch(copyFallback);
+        } else {
+            copyFallback();
+        }
+    });
+
+    processText();
+</script>
+
+</body>
+</html>
